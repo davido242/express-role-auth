@@ -3,12 +3,12 @@ const app = express();
 const PORT = 5000;
 const { connectDB } = require("./db");
 
-app.get('/', async (req, res) => {
-  // const [data] = await connectDB.query("INSERT into students (name, email, password, role) VALUES ('david', 'dave@gmail.co', '12345', 'Admin')");
-  // const [data] = await connectDB.query("SELECT * FROM students");
-  console.log({data: data});
-  res.send("Welcome bro");
-})
+// app.get('/', async (req, res) => {
+//   const [data] = await connectDB.query("INSERT into students (name, email, password, role) VALUES ('david', 'dave@gmail.co', '12345', 'Admin')");
+//   const [data] = await connectDB.query("SELECT * FROM students");
+//   console.log({data: data});
+//   res.send("Welcome bro");
+// })
 
 
 
