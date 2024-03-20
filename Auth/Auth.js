@@ -5,7 +5,7 @@ exports.register = async (req, res) => {
   if (password.length < 6) {
     return res.status(400).json({ message: "Password less than 6 characters" })
   }
-  try {    
+  try {
     const getUserQuery = "SELECT * FROM students WHERE name = ?";
     const getUserResult = await connectDB.query(getUserQuery, [name]);
 
@@ -13,7 +13,8 @@ exports.register = async (req, res) => {
         const user = getUserResult[0];
         res.status(409).json({ message: "User Already Exists", user });
     } else {
-      await connectDB.query("INSERT into students (name, email, password, role) VALUES (?, ?, ?, ?)", [name, email, password, role]);
+      const defaultRole = role || 'Basic';
+      await connectDB.query("INSERT into students (name, email, password, role) VALUES (?, ?, ?, ?)", [name, email, password, defaultRole]);
         res.status(201).json({ message: "User created" });
     }
   } catch (error) {
@@ -25,7 +26,7 @@ exports.register = async (req, res) => {
   }
 }
 
-exports.login = async (req, res, next) => {
+exports.login = async (req, res) => {
   const { name, password } = req.body  
   if (!name || !password) {
     return res.status(400).json({
@@ -51,4 +52,19 @@ exports.login = async (req, res, next) => {
       error: error.message,
     })
   }
+}
+
+exports.update = async (req, res) => {
+  const { role, id } = req.body;
+  if(role && id) {
+    if(role === 'Admin') {
+      await connectDB.query("SELECT * FROM students WHERE id = ?", [id]);
+      res.send("Admin Logged in");
+    }else {
+      res.status(400).json({message: "Role is not Admin"})
+    }
+  } else{
+    res.status(400).json({ message: "Role or Id not present" });
+  }
+
 }

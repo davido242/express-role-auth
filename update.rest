@@ -1,0 +1,7 @@
+PUT http://localhost:5000/api/auth/update
+Content-Type: application/json
+
+{  
+    "role": "Basic",
+    "id": "30"
+}
