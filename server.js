@@ -6,7 +6,7 @@ app.use(express.json());
 app.use('/api/auth', require("./Auth/Route"));
 
 app.get('/', async (req, res) => {
-  res.send("Welcome bro");
+  res.send("Welcome to role Auth server");
 })
 
 const server = app.listen(PORT, () =>
