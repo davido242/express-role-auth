@@ -42,7 +42,6 @@ exports.login = async (req, res) => {
     const [user] = await connectDB.query("SELECT * FROM students WHERE name = ?", [name]);
     if (!user[0]) {
       return res.status(401).json({
-        message: "Login not successful",
         error: "User not found",
       });
     }
@@ -64,15 +63,26 @@ exports.login = async (req, res) => {
 };
 
 exports.update = async (req, res) => {
-  const { role, id } = req.body;
-  if (role && id) {
-    if (role === "Admin") {
-      await connectDB.query("SELECT * FROM students WHERE id = ?", [id]);
-      res.send("Admin Logged in");
+  try {
+    const { role, id } = req.body;
+    if (role && id) {
+      if (role === "Admin") {
+        const [user] = await connectDB.query("SELECT * FROM students WHERE id = ?", [id]);
+        const userData = user[0];
+        if(userData.role !== "Admin") {
+          userData.role = role;
+          await connectDB.query("UPDATE students SET role = ? WHERE id = ?", [role, id]);
+          res.send(userData);
+        }else {
+          res.json({message: "User is already and Admin" });
+        }
+      } else {
+        res.status(401).json({ message: "Role is not Admin" });
+      }
     } else {
-      res.status(400).json({ message: "Role is not Admin" });
-    }
-  } else {
-    res.status(400).json({ message: "Role or Id not present" });
+      res.status(400).json({ message: "Role or Id not present" });
+    }    
+  } catch (error) {
+    console.log("🚀 ~ exports.update= ~ error:", error)
   }
 };
