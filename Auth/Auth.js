@@ -94,7 +94,7 @@ exports.deleteUser = async (req, res) => {
     if (user.length > 0) {
       const userData = user[0];
       await connectDB.query("DELETE FROM students WHERE id = ?", [userData.id]);
-      res.status(204).json({ message: "User successfully deleted", userData });
+      res.status(200).json({ message: "User successfully deleted", userData });
     } else {
       res.status(404).json({ message: "User not found" });
     }
