@@ -103,3 +103,13 @@ exports.deleteUser = async (req, res) => {
     res.status(400).json({ message: "An error occurred", error: error.message });
   }
 };
+
+exports.allUsers = async (req, res) => {
+  try {
+    const [users] = await connectDB.query("SELECT * FROM students");
+      res.status(200).json({ message: "Users successfully fetched", users });
+  } catch (error) {
+    console.log("🚀 ~ exports.allUsers= ~ error:", error)
+    res.send(error)
+  }
+};
