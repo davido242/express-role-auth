@@ -45,7 +45,7 @@ exports.login = async (req, res) => {
         error: "User not found",
       });
     }
-    
+
     if (password !== user[0].password) {
       return res.status(401).json({ message: "Password is incorrect" });
     }
@@ -69,20 +69,37 @@ exports.update = async (req, res) => {
       if (role === "Admin") {
         const [user] = await connectDB.query("SELECT * FROM students WHERE id = ?", [id]);
         const userData = user[0];
-        if(userData.role !== "Admin") {
+        if (userData.role !== "Admin") {
           userData.role = role;
           await connectDB.query("UPDATE students SET role = ? WHERE id = ?", [role, id]);
           res.send(userData);
-        }else {
-          res.json({message: "User is already and Admin" });
+        } else {
+          res.json({ message: "User is already and Admin" });
         }
       } else {
         res.status(401).json({ message: "Role is not Admin" });
       }
     } else {
       res.status(400).json({ message: "Role or Id not present" });
-    }    
+    }
   } catch (error) {
-    console.log("🚀 ~ exports.update= ~ error:", error)
+    console.log("🚀 ~ exports.update= ~ error:", error);
+  }
+};
+
+exports.deleteUser = async (req, res) => {
+  try {
+    const { id } = req.body;
+    const [user] = await connectDB.query("SELECT * FROM students WHERE id = ?", [id]);
+    if (user.length > 0) {
+      const userData = user[0];
+      await connectDB.query("DELETE FROM students WHERE id = ?", [userData.id]);
+      res.status(204).json({ message: "User successfully deleted", userData });
+    } else {
+      res.status(404).json({ message: "User not found" });
+    }
+  } catch (error) {
+    console.log("🚀 ~ exports.deleteUser ~ error:", error);
+    res.status(400).json({ message: "An error occurred", error: error.message });
   }
 };

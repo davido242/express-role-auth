@@ -1,0 +1,7 @@
+DELETE http://localhost:5000/api/auth/delete
+Content-Type: application/json
+
+{  
+    "role": "Admin",
+    "id": "31"
+}
